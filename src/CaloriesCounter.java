@@ -2,10 +2,10 @@ import java.util.Scanner;
 
 public class CaloriesCounter {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         System.out.println("This program will calculate the number of 230 calorie\n" +
-                           "candy bars to eat to maintain your weight. \n");
+                "candy bars to eat to maintain your weight. \n");
 
         double barCal = 230;
 
@@ -23,6 +23,24 @@ public class CaloriesCounter {
         System.out.print("\t [Q4] Enter 'M'(or 'm') for male or 'F'(or 'f') for female: ");
         String sexString = scanner.next();
         char sex = Character.toLowerCase(sexString.charAt(0));
+        System.out.println();
+
+        BMRCalc calculation = new BMRCalc();
+
+        double calToMaintain;
+
+        switch (sex) {
+            case 'm':
+                calToMaintain = calculation.calcBMRMale(weight, height, age);
+                break;
+            case 'f':
+                calToMaintain = calculation.calcBMRFemale(weight, height, age);
+                break;
+            default:
+                System.out.println("This program does not have functionality for intersex people :(");
+                System.out.println("Program ended.");
+                System.exit(0);
+        }
 
         System.out.print("\t [Q5] Are you: \n");
         System.out.println("\t \t A. Sedentary");
@@ -32,47 +50,22 @@ public class CaloriesCounter {
         System.out.print("\t \t Enter A, B, C, or D: ");
         String activityString = scanner.next();
         char activity = Character.toLowerCase(activityString.charAt(0));
-
-        double actMod = 0;
-
-        switch(activity) {
-            case 'a':
-                actMod = 1.2;
-                break;
-            case 'b':
-                actMod = 1.3;
-                break;
-            case 'c':
-                actMod = 1.4;
-                break;
-            case 'd':
-                actMod = 1.5;
-                break;
-            default:
-                System.out.println("Invalid entry for lifestyle.");
-        }
-
-        BMRCalc calculation = new BMRCalc();
+        double actMod = calculation.actModCalc(activity);
 
         double barsToMaintain = 0;
 
-        switch(sex){
+        switch (sex) {
             case 'm':
-                barsToMaintain = (1/barCal)*(calculation.calcBMRMale(weight, height, age, actMod));
+                barsToMaintain = (1 / barCal) * actMod * (calculation.calcBMRMale(weight, height, age));
                 break;
             case 'f':
-                barsToMaintain = (1/barCal)*(calculation.calcBMRFemale(weight, height, age, actMod));
+                barsToMaintain = (1 / barCal) * actMod * (calculation.calcBMRFemale(weight, height, age));
                 break;
-            default:
-                System.out.println("This program does not have functionality for intersex people :(");
         }
 
         System.out.println("With those measurements, you should eat " +
-                           barsToMaintain +
-                           " candy bars per day to maintain the same weight.");
-
-
-
+                barsToMaintain +
+                " candy bars per day to maintain the same weight.");
 
     }
 }
